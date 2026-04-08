@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Community | Criar Conta</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+
+:root{
+--primary:#2563eb;
+--secondary:#1e3a8a;
+--success:#10b981;
+}
+
+body{background:#f5f7fb;color:#333;}
+
+header{
+display:flex;justify-content:space-between;align-items:center;
+padding:20px 8%;background:white;
+box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+
+.logo{font-size:22px;font-weight:700;color:var(--primary);}
+
+nav a{margin-left:25px;text-decoration:none;color:#444;}
+nav a:hover{color:var(--primary);}
+
+.container{
+display:flex;justify-content:center;align-items:center;
+min-height:85vh;padding:40px 20px;
+}
+
+.form-box{
+background:white;padding:40px;border-radius:16px;
+width:100%;max-width:380px;
+box-shadow:0 15px 35px rgba(0,0,0,0.08);
+}
+
+.form-box h1{
+text-align:center;color:var(--secondary);
+margin-bottom:25px;
+}
+
+.input-group{margin-bottom:15px;}
+
+.input-group label{font-size:14px;color:#555;}
+
+.input-group input,
+.input-group select{
+width:100%;
+padding:12px;
+padding-right:50px; /* espaço maior pra setinha */
+margin-top:5px;
+border-radius:8px;border:1px solid #ddd;
+}
+
+.input-group input:focus,
+.input-group select:focus{
+outline:none;border-color:var(--primary);
+}
+
+.create-btn{
+width:100%;padding:14px;background:var(--primary);
+color:white;border:none;border-radius:8px;
+cursor:pointer;margin-top:10px;
+}
+
+.msg{text-align:center;margin-top:10px;font-size:14px;}
+
+.login-link{text-align:center;margin-top:15px;font-size:14px;}
+.login-link a{color:var(--primary);text-decoration:none;}
+
+footer{background:#111827;color:#aaa;text-align:center;padding:20px;}
+</style>
+
+</head>
+
+<body>
+
+<header>
+<div class="logo">Student Community</div>
+<nav>
+<a href="index.html">Início</a>
+<a href="#">Fórum</a>
+<a href="#">Materiais</a>
+<a href="#">Mentoria</a>
+<a id="loginLink" href="login.html">Login</a>
+</nav>
+</header>
+
+<div class="container">
+
+<form class="form-box" onsubmit="criarConta(event)">
+<h1>Criar Conta</h1>
+
+<div class="input-group">
+<label>Nome</label>
+<input type="text" id="nome" required>
+</div>
+
+<div class="input-group">
+<label>Email</label>
+<input type="email" id="email" required>
+</div>
+
+<div class="input-group">
+<label>Senha</label>
+<input type="password" id="senha" required>
+</div>
+
+<div class="input-group">
+<label>Curso</label>
+<select id="curso">
+<option value="">Selecione um curso</option>
+<option>Web Design</option>
+<option>Logística</option>
+</select>
+</div>
+
+<div class="input-group">
+<label>Tipo de usuário</label>
+<select id="tipo">
+<option>Estudante</option>
+<option>Ex-aluno (mentor)</option>
+<option>Professor</option>
+</select>
+</div>
+
+<button class="create-btn">Criar conta</button>
+
+<div class="msg" id="msg"></div>
+
+<div class="login-link">
+Já tem conta? <a href="login.html">Entrar</a>
+</div>
+
+</form>
+
+</div>
+
+<footer>
+<p>Student Community - Projeto educacional</p>
+</footer>
+
+<script>
+
+  /* HASH SIMPLES (SHA-256) */
+  async function hashSenha(senha){
+   const encoder = new TextEncoder();
+   const data = encoder.encode(senha);
+   const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+   const hashArray = Array.from(new Uint8Array(hashBuffer));
+   const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+   return hashHex;
+  }
+  
+  async function criarConta(e){
+   e.preventDefault();
+  
+   let nome = document.getElementById("nome").value.trim();
+   let email = document.getElementById("email").value.trim();
+   let senha = document.getElementById("senha").value.trim();
+   let curso = document.getElementById("curso").value;
+   let tipo = document.getElementById("tipo").value;
+  
+   let msg = document.getElementById("msg");
+  
+   if(nome === "" || email === "" || senha === ""){
+     msg.style.color = "red";
+     msg.textContent = "Preencha todos os campos obrigatórios!";
+     return;
+   }
+  
+   if(curso === ""){
+     msg.style.color = "red";
+     msg.textContent = "Selecione um curso!";
+     return;
+   }
+  
+   if(senha.length < 4){
+     msg.style.color = "red";
+     msg.textContent = "A senha deve ter pelo menos 4 caracteres!";
+     return;
+   }
+  
+   let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+  
+   let existe = usuarios.find(u => u.email === email);
+  
+   if(existe){
+     msg.style.color = "red";
+     msg.textContent = "Esse email já está cadastrado!";
+     return;
+   }
+  
+   /* 🔐 HASH DA SENHA */
+   let senhaHash = await hashSenha(senha);
+  
+   let novoUsuario = {
+     nome,
+     email,
+     senha: senhaHash,
+     curso,
+     tipo
+   };
+  
+   usuarios.push(novoUsuario);
+   localStorage.setItem("usuarios", JSON.stringify(usuarios));
+  
+   localStorage.setItem("usuarioLogado", email);
+  
+   msg.style.color = "var(--success)";
+   msg.textContent = "Conta criada com sucesso!";
+  
+   document.querySelector("form").reset();
+  
+   setTimeout(()=>{
+     window.location.href = "perfil.html";
+   },1500);
+  }
+  
+  let loginLink = document.getElementById("loginLink");
+  
+  if(localStorage.getItem("usuarioLogado")){
+   loginLink.textContent = "Perfil";
+   loginLink.href = "perfil.html";
+  }
+  
+  document.getElementById("nome").focus();
+  
+  </script>
+
+</body>
+</html>

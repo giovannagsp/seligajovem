@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Student Community</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter', sans-serif;
+}
+
+:root{
+--primary:#2563eb;
+--secondary:#1e3a8a;
+--light:#eef2ff;
+}
+
+body{
+background:#f5f7fb;
+color:#333;
+}
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 8%;
+background:white;
+position:sticky;
+top:0;
+box-shadow:0 2px 10px rgba(0,0,0,0.05);
+z-index:100;
+}
+
+.logo{
+font-size:22px;
+font-weight:700;
+color:var(--primary);
+}
+
+nav a{
+margin-left:25px;
+text-decoration:none;
+color:#444;
+transition:0.3s;
+}
+
+nav a:hover{
+color:var(--primary);
+}
+
+/* HERO COM IMAGEM */
+
+.hero{
+position:relative;
+height:80vh;
+display:flex;
+align-items:center;
+padding:0 8%;
+color:white;
+
+/* 👇 CAMINHO CORRETO */
+background:url('img/banner.jpg') center/cover no-repeat;
+}
+
+/* camada escura */
+.hero::before{
+content:"";
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.45);
+}
+
+.hero-text{
+position:relative;
+max-width:500px;
+z-index:1;
+}
+
+.hero-text h1{
+font-size:50px;
+margin-bottom:20px;
+}
+
+.hero-text p{
+font-size:18px;
+margin-bottom:25px;
+}
+
+.btn{
+display:inline-block;
+padding:15px 30px;
+background:var(--primary);
+color:white;
+border-radius:8px;
+text-decoration:none;
+box-shadow:0 10px 25px rgba(37,99,235,0.3);
+transition:0.3s;
+}
+
+.btn:hover{
+transform:translateY(-3px);
+}
+
+/* FEATURES */
+
+.features{
+padding:100px 8%;
+text-align:center;
+}
+
+.features h2{
+font-size:32px;
+margin-bottom:50px;
+}
+
+.cards{
+display:flex;
+justify-content:center;
+gap:30px;
+flex-wrap:wrap;
+}
+
+.card{
+background:white;
+padding:30px;
+border-radius:16px;
+width:260px;
+box-shadow:0 10px 25px rgba(0,0,0,0.06);
+transition:0.3s;
+border:1px solid #f1f5f9;
+}
+
+.card:hover{
+transform:translateY(-8px);
+}
+
+.card h3{
+margin-bottom:15px;
+color:var(--primary);
+}
+
+/* CTA */
+
+.cta{
+padding:120px 8%;
+background:linear-gradient(135deg,var(--secondary),var(--primary));
+color:white;
+text-align:center;
+}
+
+.cta h2{
+font-size:34px;
+margin-bottom:20px;
+max-width:700px;
+margin-left:auto;
+margin-right:auto;
+}
+
+.cta p{
+margin-bottom:30px;
+}
+
+.btn-cta{
+display:inline-block;
+padding:18px 40px;
+background:white;
+color:var(--primary);
+border-radius:40px;
+font-weight:bold;
+text-decoration:none;
+transition:0.3s;
+}
+
+.btn-cta:hover{
+transform:scale(1.1);
+}
+
+footer{
+background:#2563eb;
+color:#eef2ff;
+text-align:center;
+padding:20px;
+}
+
+@media(max-width:900px){
+.hero{
+height:70vh;
+text-align:center;
+}
+
+.hero-text{
+margin:auto;
+}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+<div class="logo">Student Community</div>
+<nav>
+<a href="index.html">Início</a>
+<a href="#">Fórum</a>
+<a href="#">Materiais</a>
+<a href="#">Mentoria</a>
+<a id="loginLink" href="login.html">Login</a>
+</nav>
+</header>
+
+<section class="hero">
+
+<div class="hero-text">
+<h1>Você não precisa estudar sozinho</h1>
+<p>Conecte-se com estudantes, compartilhe conhecimento e evolua com uma comunidade que aprende de verdade.</p>
+
+<a href="login.html" class="btn">Entrar na comunidade</a>
+</div>
+
+</section>
+
+<section class="features">
+<h2>Como a plataforma funciona</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>Fórum</h3>
+<p>Faça perguntas e participe de discussões com outros estudantes.</p>
+</div>
+
+<div class="card">
+<h3>Materiais</h3>
+<p>Acesse e compartilhe resumos, PDFs e exercícios.</p>
+</div>
+
+<div class="card">
+<h3>Dicas</h3>
+<p>Descubra métodos de estudo e produtividade.</p>
+</div>
+
+<div class="card">
+<h3>Mentoria</h3>
+<p>Receba orientação de quem já passou pelo mesmo caminho.</p>
+</div>
+
+</div>
+
+</section>
+
+<section class="cta">
+<h2>Estudar sozinho é difícil. Evoluir em comunidade é outra história.</h2>
+<p>Junte-se a outros estudantes e transforme sua forma de aprender.</p>
+
+<a href="criarperfil.html" class="btn-cta">Começar agora</a>
+
+</section>
+
+<footer>
+<p>Student Community - Projeto educacional</p>
+</footer>
+
+<script>
+
+let loginLink = document.getElementById("loginLink");
+
+if(localStorage.getItem("usuarioLogado")){
+ loginLink.textContent = "Perfil";
+ loginLink.href = "perfil.html";
+}
+
+</script>
+
+</body>
+</html>

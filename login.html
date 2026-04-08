@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Community | Login</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+
+:root{
+--primary:#2563eb;
+--secondary:#1e3a8a;
+}
+
+body{background:#f5f7fb;}
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 8%;
+background:white;
+box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+
+.logo{font-size:22px;font-weight:700;color:var(--primary);}
+
+nav a{margin-left:25px;text-decoration:none;color:#444;}
+nav a:hover{color:var(--primary);}
+
+.container{
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:85vh;
+padding:40px 20px;
+}
+
+.form-box{
+background:white;
+padding:40px;
+border-radius:16px;
+width:100%;
+max-width:360px;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.form-box h1{
+text-align:center;
+margin-bottom:25px;
+color:var(--secondary);
+}
+
+.input-group{margin-bottom:15px;}
+
+.input-group input{
+width:100%;
+padding:12px;
+border-radius:8px;
+border:1px solid #ddd;
+}
+
+.input-group input:focus{
+outline:none;
+border-color:var(--primary);
+}
+
+button{
+width:100%;
+padding:14px;
+background:var(--primary);
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+margin-top:10px;
+}
+
+.msg{
+text-align:center;
+margin-top:10px;
+font-size:14px;
+}
+
+.signup-link{
+text-align:center;
+margin-top:15px;
+font-size:14px;
+}
+
+.signup-link a{
+color:var(--primary);
+text-decoration:none;
+}
+
+footer{
+background:#111827;
+color:#aaa;
+text-align:center;
+padding:20px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">Student Community</div>
+<nav>
+<a href="index.html">Início</a>
+<a href="#">Fórum</a>
+<a href="#">Materiais</a>
+<a href="#">Mentoria</a>
+<a href="login.html">Login</a>
+</nav>
+</header>
+
+<div class="container">
+
+<form class="form-box" onsubmit="login(event)">
+<h1>Entrar</h1>
+
+<div class="input-group">
+<input type="email" id="email" placeholder="Email" required>
+</div>
+
+<div class="input-group">
+<input type="password" id="senha" placeholder="Senha" required>
+</div>
+
+<button>Entrar</button>
+
+<div class="msg" id="msg"></div>
+
+<div class="signup-link">
+Não tem conta? <a href="criarperfil.html">Criar conta</a>
+</div>
+
+</form>
+
+</div>
+
+<footer>
+<p>Student Community - Projeto educacional</p>
+</footer>
+
+<script>
+
+function login(e){
+ e.preventDefault();
+
+ let email = document.getElementById("email").value;
+ let senha = document.getElementById("senha").value;
+
+ let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+ let usuario = usuarios.find(u => u.email === email && u.senha === senha);
+
+ let msg = document.getElementById("msg");
+
+ if(usuario){
+   localStorage.setItem("usuarioLogado", email);
+
+   msg.style.color = "green";
+   msg.textContent = "Login realizado com sucesso!";
+
+   setTimeout(()=>{
+     window.location.href = "perfil.html";
+   },1000);
+
+ } else {
+   msg.style.color = "red";
+   msg.textContent = "Email ou senha incorretos";
+ }
+}
+
+</script>
+
+</body>
+</html>
