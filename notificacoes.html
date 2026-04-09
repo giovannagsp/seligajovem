@@ -128,6 +128,38 @@ color:#777;
 .sidebar{width:100%;min-height:auto;}
 }
 
+/* 🌙 DARK MODE (ADICIONADO) */
+body.dark{
+background:#0f172a;
+color:white;
+}
+
+body.dark header{
+background:#1e293b;
+}
+
+body.dark nav a{
+color:#cbd5f5;
+}
+
+body.dark .notif{
+background:#1e293b;
+color:white;
+}
+
+body.dark .notif.unread{
+background:#1e3a8a33;
+border-left:5px solid #3b82f6;
+}
+
+body.dark .notif small{
+color:#cbd5f5;
+}
+
+body.dark .sidebar{
+background:#020617;
+}
+
 </style>
 </head>
 
@@ -180,7 +212,7 @@ let notificacoes = JSON.parse(localStorage.getItem("notificacoes_"+email));
 if(!Array.isArray(notificacoes)){
 notificacoes = [
 {texto:"Seu perfil foi atualizado com sucesso", lida:false, data:"Agora"},
-{texto:"Novo seguidor começou a te seguir", lida:false, data:"2 min"},
+{texto:"Novo seguidor", lida:false, data:"2 min"},
 {texto:"Seu projeto recebeu uma curtida", lida:false, data:"5 min"},
 {texto:"Novo comentário no seu projeto", lida:false, data:"10 min"},
 {texto:"Seu perfil teve 20 visualizações", lida:true, data:"30 min"},
@@ -197,7 +229,7 @@ const lista = document.getElementById("lista");
 lista.innerHTML = "";
 
 if(notificacoes.length === 0){
-lista.innerHTML = "<div class='empty'>Sem notificações ✨</div>";
+lista.innerHTML = "<div class='empty'>Sem notificações</div>";
 return;
 }
 
@@ -245,6 +277,26 @@ location.href="index.html";
 }
 
 render();
+
+/* 🌙 SCRIPT DO TEMA (ADICIONADO) */
+function applyTheme(theme){
+if(theme === "dark"){
+document.body.classList.add("dark");
+}
+else if(theme === "light"){
+document.body.classList.remove("dark");
+}
+else{
+if(window.matchMedia('(prefers-color-scheme: dark)').matches){
+document.body.classList.add("dark");
+}else{
+document.body.classList.remove("dark");
+}
+}
+}
+
+let savedTheme = localStorage.getItem("theme") || "auto";
+applyTheme(savedTheme);
 
 </script>
 
