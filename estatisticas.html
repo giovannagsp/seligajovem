@@ -131,6 +131,47 @@ transition:1s;
 .grid{grid-template-columns:1fr;}
 }
 
+/* 🌙 DARK MODE (ADICIONADO) */
+body.dark{
+background:#0f172a;
+color:white;
+}
+
+body.dark header{
+background:#1e293b;
+}
+
+body.dark nav a{
+color:#cbd5f5;
+}
+
+body.dark .sidebar{
+background:#020617;
+}
+
+body.dark .card,
+body.dark .box{
+background:#1e293b;
+color:white;
+}
+
+body.dark .card span,
+body.dark .title p{
+color:#cbd5f5;
+}
+
+body.dark .project{
+border-bottom:1px solid #334155;
+}
+
+body.dark .progress{
+background:#334155;
+}
+
+body.dark .progress div{
+background:#3b82f6;
+}
+
 </style>
 </head>
 
@@ -174,7 +215,6 @@ transition:1s;
 
 <div class="grid">
 
-<!-- COLUNA ESQUERDA -->
 <div>
 
 <div class="box">
@@ -195,7 +235,6 @@ transition:1s;
 
 </div>
 
-<!-- COLUNA DIREITA -->
 <div>
 
 <div class="box">
@@ -222,105 +261,113 @@ transition:1s;
 
 <script>
 
-    window.onload = function(){
-    
-    /* TENTA PEGAR DADOS */
-    let portfolio = [];
-    
-    /* TENTA LOCALSTORAGE COM SEGURANÇA */
-    try{
-    portfolio = JSON.parse(localStorage.getItem("portfolio")) || [];
-    }catch(e){
-    portfolio = [];
-    }
-    
-    /* SE NÃO TIVER NADA → CRIA DADOS */
-    if(portfolio.length === 0){
-    portfolio = [
-    {nome:"Landing Page", likes:120, views:540},
-    {nome:"Sistema de Login", likes:95, views:430},
-    {nome:"App Mobile UI", likes:150, views:620}
-    ];
-    }
-    
-    /* GARANTE QUE TODOS TÊM DADOS */
-    portfolio.forEach(p=>{
-    if(!p.likes) p.likes = Math.floor(Math.random()*150 + 50);
-    if(!p.views) p.views = Math.floor(Math.random()*500 + 200);
-    });
-    
-    /* CALCULA */
-    let projects = portfolio.length;
-    let totalLikes = portfolio.reduce((a,p)=>a+p.likes,0);
-    let totalViews = portfolio.reduce((a,p)=>a+p.views,0);
-    
-    let avg = Math.floor(totalLikes / projects);
-    let eng = ((totalLikes / totalViews)*100).toFixed(1);
-    
-    /* ATUALIZA CARDS */
-    document.getElementById("projects").textContent = projects;
-    document.getElementById("avg").textContent = avg;
-    document.getElementById("views").textContent = totalViews;
-    document.getElementById("eng").textContent = eng + "%";
-    
-    /* META */
-    let meta = 5;
-    let progress = Math.min((projects/meta)*100,100);
-    
-    document.getElementById("goalText").textContent = projects + " de " + meta + " projetos";
-    document.getElementById("goalBar").style.width = progress + "%";
-    
-    /* PROJETOS */
-    let list = document.getElementById("projectList");
-    if(list){
-    list.innerHTML = "";
-    
-    portfolio.forEach(p=>{
-    let div = document.createElement("div");
-    div.className="project";
-    div.innerHTML = `
-    <span>${p.nome}</span>
-    <span>${p.likes} curtidas • ${p.views} views</span>
-    `;
-    list.appendChild(div);
-    });
-    }
-    
-    /* ATIVIDADE */
-    let act = document.getElementById("activity");
-    if(act){
-    act.innerHTML = "";
-    portfolio.slice(0,3).forEach(p=>{
-    let div = document.createElement("div");
-    div.className="project";
-    div.textContent = p.nome + " recebeu novas interações";
-    act.appendChild(div);
-    });
-    }
-    
-    /* TOP PROJETO */
-    let top = portfolio.sort((a,b)=>b.likes-a.likes)[0];
-    let topEl = document.getElementById("topProject");
-    if(topEl){
-    topEl.textContent = top.nome + " (" + top.likes + " curtidas)";
-    }
-    
-    /* CRESCIMENTO */
-    let growthEl = document.getElementById("growth");
-    if(growthEl){
-    growthEl.textContent = "+" + (Math.floor(Math.random()*15+5)) + "% este mês";
-    }
-    
-    /* SEGUIDORES */
-    let followersEl = document.getElementById("followers");
-    if(followersEl){
-    let followers = Math.floor(totalLikes * 0.7);
-    followersEl.textContent = followers;
-    }
-    
-    }
-    
-    </script>
+window.onload = function(){
+
+let portfolio = [];
+
+try{
+portfolio = JSON.parse(localStorage.getItem("portfolio")) || [];
+}catch(e){
+portfolio = [];
+}
+
+if(portfolio.length === 0){
+portfolio = [
+{nome:"Landing Page", likes:120, views:540},
+{nome:"Sistema de Login", likes:95, views:430},
+{nome:"App Mobile UI", likes:150, views:620}
+];
+}
+
+portfolio.forEach(p=>{
+if(!p.likes) p.likes = Math.floor(Math.random()*150 + 50);
+if(!p.views) p.views = Math.floor(Math.random()*500 + 200);
+});
+
+let projects = portfolio.length;
+let totalLikes = portfolio.reduce((a,p)=>a+p.likes,0);
+let totalViews = portfolio.reduce((a,p)=>a+p.views,0);
+
+let avg = Math.floor(totalLikes / projects);
+let eng = ((totalLikes / totalViews)*100).toFixed(1);
+
+document.getElementById("projects").textContent = projects;
+document.getElementById("avg").textContent = avg;
+document.getElementById("views").textContent = totalViews;
+document.getElementById("eng").textContent = eng + "%";
+
+let meta = 5;
+let progress = Math.min((projects/meta)*100,100);
+
+document.getElementById("goalText").textContent = projects + " de " + meta + " projetos";
+document.getElementById("goalBar").style.width = progress + "%";
+
+let list = document.getElementById("projectList");
+if(list){
+list.innerHTML = "";
+
+portfolio.forEach(p=>{
+let div = document.createElement("div");
+div.className="project";
+div.innerHTML = `
+<span>${p.nome}</span>
+<span>${p.likes} curtidas • ${p.views} views</span>
+`;
+list.appendChild(div);
+});
+}
+
+let act = document.getElementById("activity");
+if(act){
+act.innerHTML = "";
+portfolio.slice(0,3).forEach(p=>{
+let div = document.createElement("div");
+div.className="project";
+div.textContent = p.nome + " recebeu novas interações";
+act.appendChild(div);
+});
+}
+
+let top = portfolio.sort((a,b)=>b.likes-a.likes)[0];
+let topEl = document.getElementById("topProject");
+if(topEl){
+topEl.textContent = top.nome + " (" + top.likes + " curtidas)";
+}
+
+let growthEl = document.getElementById("growth");
+if(growthEl){
+growthEl.textContent = "+" + (Math.floor(Math.random()*15+5)) + "% este mês";
+}
+
+let followersEl = document.getElementById("followers");
+if(followersEl){
+let followers = Math.floor(totalLikes * 0.7);
+followersEl.textContent = followers;
+}
+
+}
+
+/* 🌙 SCRIPT DO TEMA (ADICIONADO) */
+function applyTheme(theme){
+if(theme === "dark"){
+document.body.classList.add("dark");
+}
+else if(theme === "light"){
+document.body.classList.remove("dark");
+}
+else{
+if(window.matchMedia('(prefers-color-scheme: dark)').matches){
+document.body.classList.add("dark");
+}else{
+document.body.classList.remove("dark");
+}
+}
+}
+
+let savedTheme = localStorage.getItem("theme") || "auto";
+applyTheme(savedTheme);
+
+</script>
 
 </body>
 </html>
