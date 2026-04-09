@@ -107,7 +107,6 @@ gap:40px;
 margin:15px 0;
 }
 
-/* BOTÃO EDITAR */
 .edit-btn{
 display:inline-block;
 padding:10px 20px;
@@ -123,7 +122,6 @@ transition:0.3s;
 transform:translateY(-2px);
 }
 
-/* BIO */
 .bio{
 margin-top:10px;
 color:#555;
@@ -131,7 +129,6 @@ line-height:1.4;
 max-width:500px;
 }
 
-/* SECTION */
 .section{
 background:white;
 border-radius:16px;
@@ -147,7 +144,6 @@ align-items:center;
 margin-bottom:10px;
 }
 
-/* PORTFOLIO */
 .grid{
 display:grid;
 grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
@@ -190,7 +186,6 @@ cursor:pointer;
 font-size:12px;
 }
 
-/* MODAL */
 .modal{
 display:none;
 position:fixed;
@@ -218,7 +213,6 @@ from{opacity:0;transform:scale(0.9);}
 to{opacity:1;transform:scale(1);}
 }
 
-/* BOTÃO X */
 .close-btn{
 position:absolute;
 top:10px;
@@ -233,7 +227,6 @@ cursor:pointer;
 font-weight:bold;
 }
 
-/* INPUTS */
 input, textarea{
 width:100%;
 margin-bottom:10px;
@@ -242,7 +235,6 @@ border-radius:8px;
 border:1px solid #ddd;
 }
 
-/* BOTÕES */
 button{cursor:pointer;}
 
 .save{
@@ -262,7 +254,6 @@ border:none;
 border-radius:6px;
 }
 
-/* PREVIEW */
 .preview{
 display:none;
 position:fixed;
@@ -279,6 +270,46 @@ z-index:200;
 .preview img{
 max-width:80%;
 border-radius:12px;
+}
+
+body.dark{
+background:#0f172a;
+color:white;
+}
+
+body.dark header{
+background:#1e293b;
+}
+
+body.dark nav a{
+color:#cbd5f5;
+}
+
+body.dark .profile-card,
+body.dark .section,
+body.dark .card,
+body.dark .modal-box{
+background:#1e293b;
+color:white;
+}
+
+body.dark .bio{
+color:#cbd5f5;
+}
+
+body.dark input,
+body.dark textarea{
+background:#0f172a;
+color:white;
+border:1px solid #334155;
+}
+
+body.dark .card-content p{
+color:#cbd5f5;
+}
+
+body.dark .sidebar{
+background:#020617;
 }
 
 </style>
@@ -316,10 +347,7 @@ border-radius:12px;
 
 <div class="profile-info">
 <h2 id="nome"></h2>
-
 <p id="username" style="color:#6b7280;font-size:14px;"></p>
-
-<!-- 🔥 BIO AQUI -->
 <p id="bio" class="bio"></p>
 
 <div class="stats">
@@ -329,7 +357,6 @@ border-radius:12px;
 </div>
 
 <a href="editar.html" class="edit-btn">Editar perfil</a>
-
 </div>
 </div>
 
@@ -373,22 +400,18 @@ let user = usuarios.find(u=>u.email===email);
 
 if(!user) location.href="login.html";
 
-/* DADOS */
 document.getElementById("nome").textContent = user.nome;
 document.getElementById("username").textContent = user.username ? "@" + user.username : user.email;
-document.getElementById("foto").src = user.foto || "https://via.placeholder.com/120";
-
-/* BIO (CORRIGIDO) */
+document.getElementById("foto").src = user.foto || "imagens/user.png";
 document.getElementById("bio").textContent = user.bio || "Sem bio ainda...";
 
-/* PORTFOLIO */
 let portfolio = JSON.parse(localStorage.getItem("portfolio_"+email));
 
 if(!portfolio){
 portfolio=[
-{nome:"App UI",img:"https://via.placeholder.com/300",desc:"Interface moderna"},
-{nome:"Landing Page",img:"https://via.placeholder.com/300",desc:"Página de vendas"},
-{nome:"Sistema Web",img:"https://via.placeholder.com/300",desc:"Gestão completa"}
+{nome:"App UI", img:"imagens/app-ui.png", desc:"Interface moderna"},
+{nome:"Landing Page", img:"imagens/landing-page.png", desc:"Página de vendas"},
+{nome:"Sistema Web", img:"imagens/sistema.png", desc:"Gestão completa"}
 ];
 localStorage.setItem("portfolio_"+email,JSON.stringify(portfolio));
 }
@@ -413,10 +436,7 @@ grid.innerHTML+=`
 
 render();
 
-function abrirModal(){
-document.getElementById("modal").style.display="flex";
-}
-
+function abrirModal(){document.getElementById("modal").style.display="flex";}
 function fecharModal(){
 document.getElementById("modal").style.display="none";
 document.getElementById("nomeProj").value="";
@@ -442,7 +462,7 @@ fecharModal();
 };
 reader.readAsDataURL(file);
 }else{
-portfolio.push({nome,desc,img:"https://via.placeholder.com/300"});
+portfolio.push({nome,desc,img:"imagens/default.png"});
 localStorage.setItem("portfolio_"+email,JSON.stringify(portfolio));
 render();
 fecharModal();
@@ -468,6 +488,25 @@ function logout(){
 localStorage.removeItem("usuarioLogado");
 location.href="index.html";
 }
+
+function applyTheme(theme){
+if(theme === "dark"){
+document.body.classList.add("dark");
+}
+else if(theme === "light"){
+document.body.classList.remove("dark");
+}
+else{
+if(window.matchMedia('(prefers-color-scheme: dark)').matches){
+document.body.classList.add("dark");
+}else{
+document.body.classList.remove("dark");
+}
+}
+}
+
+let savedTheme = localStorage.getItem("theme") || "auto";
+applyTheme(savedTheme);
 
 </script>
 
