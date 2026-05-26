@@ -1,514 +1,667 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
 
-<title>Perfil</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Study Community | Perfil</title>
+
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  
+    const firebaseConfig = {
+      apiKey: "SUA_API_KEY",
+      authDomain: "SEU_DOMINIO",
+      projectId: "SEU_PROJECT_ID",
+      storageBucket: "SEU_BUCKET",
+      messagingSenderId: "SEU_ID",
+      appId: "SEU_APP_ID"
+    };
+  
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+  
+    // Deixar as referências e funções acessíveis globalmente
+    window.auth = auth;
+    window.db = db;
+    window.signOut = signOut;
+    window.onAuthStateChanged = onAuthStateChanged;
+    window.doc = doc;
+    window.getDoc = getDoc;
+    window.updateDoc = updateDoc;
+  </script>
 
 <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+  :root {
+    color-scheme: light;
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --success: #10b981;
+    --danger: #ef4444;
+    --bg: #f4f6fb;
+    --surface: #ffffff;
+    --surface-soft: #eef2ff;
+    --text: #172033;
+    --muted: #647084;
+    --border: #dbe3ef;
+    --shadow: 0 20px 48px rgba(15, 23, 42, 0.1);
+    --header-bg: rgba(255, 255, 255, 0.9);
+  }
 
-:root{
---primary:#2563eb;
---secondary:#1e3a8a;
---light:#eef2ff;
-}
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --primary: #60a5fa;
+      --primary-dark: #93c5fd;
+      --success: #34d399;
+      --danger: #f87171;
+      --bg: #0f172a;
+      --surface: #162033;
+      --surface-soft: #111c30;
+      --text: #e5edf9;
+      --muted: #a9b4c7;
+      --border: #2a3952;
+      --shadow: 0 20px 48px rgba(0, 0, 0, 0.36);
+      --header-bg: rgba(15, 23, 42, 0.9);
+    }
+  }
 
-body{background:var(--light);}
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    line-height: 1.5;
+  }
 
-/* NAVBAR */
-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:20px 8%;
-background:white;
-box-shadow:0 2px 10px rgba(0,0,0,0.05);
-position:sticky;
-top:0;
-z-index:10;
-}
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 18px 8%;
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(14px);
+  }
 
-.logo{
-font-size:22px;
-font-weight:700;
-color:var(--primary);
-}
+  .logo {
+    color: var(--primary);
+    font-size: 22px;
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+  }
 
-nav a{
-margin-left:25px;
-text-decoration:none;
-color:#444;
-transition:0.3s ease;
-}
+  nav {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
 
-nav a:hover{color:var(--primary);}
+  nav a,
+  nav button {
+    padding: 8px 11px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+  }
 
-/* LAYOUT */
-.container{display:flex;}
+  nav a:hover,
+  nav button:hover {
+    color: var(--primary);
+    background: color-mix(in srgb, var(--primary) 12%, transparent);
+  }
 
-.sidebar{
-width:240px;
-background:var(--secondary);
-color:white;
-min-height:100vh;
-padding:30px 20px;
-}
+  main {
+    flex: 1;
+    padding: 46px 8%;
+  }
 
-.sidebar a{
-display:block;
-margin:15px 0;
-color:#c7d2fe;
-text-decoration:none;
-transition:0.3s;
-}
+  .profile-layout {
+    width: min(1120px, 100%);
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 24px;
+    margin: 0 auto;
+  }
 
-.sidebar a:hover{color:white;}
+  .identity-panel {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 98px;
+    align-self: start;
+    overflow: hidden;
+  }
 
-.main{flex:1;padding:30px;}
+  .identity-cover {
+    min-height: 120px;
+    background:
+      linear-gradient(135deg, rgba(37, 99, 235, 0.92), rgba(16, 185, 129, 0.78)),
+      url('img/banner.jpg') center/cover no-repeat;
+  }
 
-/* PROFILE */
-.profile-card{
-background:white;
-border-radius:20px;
-overflow:hidden;
-margin-bottom:30px;
-box-shadow:0 20px 40px rgba(0,0,0,0.08);
-}
+  .identity-body {
+    padding: 0 24px 24px;
+    text-align: center;
+  }
 
-.cover{
-height:180px;
-background:linear-gradient(135deg,var(--primary),#1e40af);
-position:relative;
-}
+  .avatar {
+    width: 144px;
+    height: 144px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    margin: -72px auto 16px;
+    border: 6px solid var(--surface);
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--success));
+    color: white;
+    font-size: 44px;
+    font-weight: 800;
+    box-shadow: 0 18px 34px rgba(15, 23, 42, 0.22);
+  }
 
-.profile-pic{
-width:120px;
-height:120px;
-border-radius:50%;
-border:5px solid white;
-position:absolute;
-bottom:-60px;
-left:40px;
-object-fit:cover;
-}
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
-.profile-info{
-padding:80px 40px 30px;
-}
+  h1 {
+    color: var(--text);
+    font-size: 30px;
+    line-height: 1.12;
+    word-break: break-word;
+  }
 
-.stats{
-display:flex;
-gap:40px;
-margin:15px 0;
-}
+  .email {
+    margin-top: 8px;
+    color: var(--primary);
+    font-size: 14px;
+    font-weight: 700;
+    word-break: break-word;
+  }
 
-.edit-btn{
-display:inline-block;
-padding:10px 20px;
-background:var(--primary);
-color:white;
-border-radius:8px;
-text-decoration:none;
-cursor:pointer;
-transition:0.3s;
-}
+  .role-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    margin: 16px 0;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--primary) 12%, transparent);
+    color: var(--primary);
+    font-size: 14px;
+    font-weight: 800;
+  }
 
-.edit-btn:hover{
-transform:translateY(-2px);
-}
+  .bio {
+    color: var(--muted);
+    font-size: 15px;
+  }
 
-.bio{
-margin-top:10px;
-color:#555;
-line-height:1.4;
-max-width:500px;
-}
+  .identity-actions {
+    display: grid;
+    gap: 10px;
+    margin-top: 22px;
+  }
 
-.section{
-background:white;
-border-radius:16px;
-padding:20px;
-margin-bottom:20px;
-box-shadow:0 10px 25px rgba(0,0,0,0.05);
-}
+  .button {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--primary);
+    color: white;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+  }
 
-.section h3{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:10px;
-}
+  .button:hover {
+    transform: translateY(-2px);
+    background: var(--primary-dark);
+  }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-gap:20px;
-}
+  .button.secondary {
+    background: var(--surface-soft);
+    color: var(--text);
+  }
 
-.card{
-background:white;
-border-radius:12px;
-overflow:hidden;
-box-shadow:0 8px 20px rgba(0,0,0,0.05);
-transition:0.3s;
-cursor:pointer;
-position:relative;
-}
+  .button.danger {
+    background: var(--danger);
+    color: white;
+  }
 
-.card:hover{
-transform:translateY(-5px) scale(1.02);
-}
+  .dashboard {
+    display: grid;
+    gap: 24px;
+  }
 
-.card img{
-width:100%;
-height:140px;
-object-fit:cover;
-}
+  .welcome {
+    padding: 28px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background:
+      linear-gradient(135deg,
+        color-mix(in srgb, var(--primary) 14%, transparent),
+        color-mix(in srgb, var(--success) 12%, transparent)
+      ),
+      var(--surface);
+    box-shadow: var(--shadow);
+  }
 
-.card-content{padding:10px;}
+  .welcome h2 {
+    margin-bottom: 8px;
+    font-size: clamp(28px, 4vw, 40px);
+  }
 
-.delete-btn{
-position:absolute;
-top:10px;
-right:10px;
-background:red;
-color:white;
-border:none;
-border-radius:50%;
-width:25px;
-height:25px;
-cursor:pointer;
-font-size:12px;
-}
+  .welcome p {
+    max-width: 720px;
+    color: var(--muted);
+    font-size: 16px;
+  }
 
-.modal{
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.6);
-justify-content:center;
-align-items:center;
-z-index:100;
-}
+  dialog {
+    width: min(520px, calc(100% - 28px));
+    margin: auto;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
 
-.modal-box{
-background:white;
-padding:20px;
-border-radius:12px;
-width:320px;
-position:relative;
-animation:fade 0.3s;
-}
+  dialog::backdrop {
+    background: rgba(15, 23, 42, 0.62);
+  }
 
-@keyframes fade{
-from{opacity:0;transform:scale(0.9);}
-to{opacity:1;transform:scale(1);}
-}
+  .edit-form {
+    padding: 26px;
+  }
 
-.close-btn{
-position:absolute;
-top:10px;
-right:10px;
-background:#ef4444;
-color:white;
-border:none;
-border-radius:50%;
-width:28px;
-height:28px;
-cursor:pointer;
-font-weight:bold;
-}
+  .input-group {
+    margin-bottom: 15px;
+  }
 
-input, textarea{
-width:100%;
-margin-bottom:10px;
-padding:10px;
-border-radius:8px;
-border:1px solid #ddd;
-}
+  .input-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: 800;
+  }
 
-button{cursor:pointer;}
+  .input-group input,
+  .input-group textarea,
+  .input-group select {
+    width: 100%;
+    min-height: 44px;
+    padding: 11px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+  }
 
-.save{
-background:#10b981;
-color:white;
-width:100%;
-padding:10px;
-border:none;
-border-radius:8px;
-}
+  .edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+  }
 
-.add{
-background:var(--primary);
-color:white;
-padding:6px 12px;
-border:none;
-border-radius:6px;
-}
+  footer {
+    padding: 20px 8%;
+    background: #111827;
+    color: #b8c1d1;
+    text-align: center;
+  }
 
-.preview{
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.8);
-justify-content:center;
-align-items:center;
-z-index:200;
-}
+  @media (max-width: 940px) {
+    .profile-layout {
+      grid-template-columns: 1fr;
+    }
 
-.preview img{
-max-width:80%;
-border-radius:12px;
-}
+    .identity-panel {
+      position: static;
+    }
+  }
 
-body.dark{
-background:#0f172a;
-color:white;
-}
+  @media (max-width: 720px) {
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
 
-body.dark header{
-background:#1e293b;
-}
-
-body.dark nav a{
-color:#cbd5f5;
-}
-
-body.dark .profile-card,
-body.dark .section,
-body.dark .card,
-body.dark .modal-box{
-background:#1e293b;
-color:white;
-}
-
-body.dark .bio{
-color:#cbd5f5;
-}
-
-body.dark input,
-body.dark textarea{
-background:#0f172a;
-color:white;
-border:1px solid #334155;
-}
-
-body.dark .card-content p{
-color:#cbd5f5;
-}
-
-body.dark .sidebar{
-background:#020617;
-}
-
+    main {
+      padding: 34px 6%;
+    }
+  }
 </style>
-</head>
 
 <body>
+  <header>
+    <a class="logo" href="index.html">Study Community</a>
 
-<header>
-<div class="logo">Student Community</div>
-<nav>
-<a href="index.html">Início</a>
-<a href="#">Fórum</a>
-<a href="#">Materiais</a>
-<a href="#">Mentoria</a>
-<a href="perfil.html">Perfil</a>
-</nav>
-</header>
+    <nav aria-label="Navegação principal">
+      <a href="index.html">Início</a>
+      <a href="forum.html">Fórum</a>
+      <a href="materiais.html">Materiais</a>
+      <a href="perfil.html">Perfil</a>
 
-<div class="container">
+      <button id="logoutBtn" type="button">Sair</button>
+    </nav>
+  </header>
 
-<div class="sidebar">
-<a href="perfil.html">Perfil</a>
-<a href="notificacoes.html">Notificações</a>
-<a href="estatisticas.html">Estatísticas</a>
-<a href="configuracoes.html">Configurações</a>
-<a href="#" onclick="logout()">Sair</a>
-</div>
+  <main id="profileRoot">
+    <div style="text-align: center; padding: 40px; color: var(--muted);">Carregando perfil...</div>
+  </main>
 
-<div class="main">
+  <dialog id="editDialog">
+    <form class="edit-form" id="editForm">
+      <h2>Editar Perfil</h2>
 
-<div class="profile-card">
-<div class="cover">
-<img id="foto" class="profile-pic">
-</div>
+      <div class="input-group">
+        <label for="editName">Nome de usuário</label>
+        <input id="editName" type="text" maxlength="32" required>
+      </div>
 
-<div class="profile-info">
-<h2 id="nome"></h2>
-<p id="username" style="color:#6b7280;font-size:14px;"></p>
-<p id="bio" class="bio"></p>
+      <div class="input-group">
+        <label for="editBio">Biografia</label>
+        <textarea id="editBio" maxlength="220" required style="width: 100%; min-height: 100px; padding: 11px; border: 1px solid var(--border); border-radius: 8px; resize: vertical;"></textarea>
+      </div>
 
-<div class="stats">
-<div><strong>3K</strong>Likes</div>
-<div><strong>2.6K</strong>Followers</div>
-<div><strong>1K</strong>Following</div>
-</div>
+      <div class="input-group">
+        <label for="editUserType">Tipo de usuário</label>
+        <select id="editUserType" required>
+          <option value="estudante">Estudante</option>
+          <option value="professor">Professor</option>
+        </select>
+      </div>
 
-<a href="editar.html" class="edit-btn">Editar perfil</a>
-</div>
-</div>
+      <div class="input-group">
+        <label for="editPhoto">Foto de perfil</label>
+        <input id="editPhoto" type="file" accept="image/*">
+      </div>
 
-<div class="section">
-<h3>
-Portfólio
-<button class="add" onclick="abrirModal()">+ Adicionar</button>
-</h3>
+      <div class="edit-actions">
+        <button class="button secondary" id="cancelEdit" type="button">Cancelar</button>
+        <button class="button" type="submit" id="saveEditBtn">Salvar alterações</button>
+      </div>
+    </form>
+  </dialog>
 
-<div class="grid" id="grid"></div>
-</div>
-
-</div>
-</div>
-
-<div class="modal" id="modal">
-<div class="modal-box">
-
-<button class="close-btn" onclick="fecharModal()">✕</button>
-
-<h3>Novo Projeto</h3>
-
-<input id="nomeProj" placeholder="Nome">
-<input type="file" id="imgProj">
-<textarea id="descProj" placeholder="Descrição"></textarea>
-
-<button class="save" onclick="salvarProjeto()">Salvar</button>
-
-</div>
-</div>
-
-<div class="preview" id="preview" onclick="fecharPreview()">
-<img id="previewImg">
-</div>
+  <footer>
+    <p>Study Community - Plataforma colaborativa de estudos</p>
+  </footer>
+</body>
 
 <script>
+  const logoutBtn = document.getElementById("logoutBtn");
 
-let email = localStorage.getItem("usuarioLogado");
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-let user = usuarios.find(u=>u.email===email);
+  // FUNÇÃO DE LOGOUT ATUALIZADA
+  async function logout() {
+    try {
+      if (window.auth) {
+        await window.signOut(window.auth);
+      }
+    } catch (e) {
+      console.error("Erro ao deslogar do Firebase:", e);
+    }
+    localStorage.removeItem("studylinkCurrentUser");
+    localStorage.setItem("usuarioLogado", "false");
+    window.location.href = "login.html";
+  }
 
-if(!user) location.href="login.html";
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", logout);
+  }
 
-document.getElementById("nome").textContent = user.nome;
-document.getElementById("username").textContent = user.username ? "@" + user.username : user.email;
-document.getElementById("foto").src = user.foto || "imagens/user.png";
-document.getElementById("bio").textContent = user.bio || "Sem bio ainda...";
+  const profileRoot = document.getElementById("profileRoot");
+  const editDialog = document.getElementById("editDialog");
+  const editForm = document.getElementById("editForm");
+  const cancelEdit = document.getElementById("cancelEdit");
+  const editName = document.getElementById("editName");
+  const editBio = document.getElementById("editBio");
+  const editUserType = document.getElementById("editUserType");
+  const editPhoto = document.getElementById("editPhoto");
+  const saveEditBtn = document.getElementById("saveEditBtn");
 
-let portfolio = JSON.parse(localStorage.getItem("portfolio_"+email));
+  const roleLabels = {
+    estudante: "Aluno",
+    mentor: "Mentor",
+    professor: "Professor"
+  };
 
-if(!portfolio){
-portfolio=[
-{nome:"App UI", img:"imagens/app-ui.png", desc:"Interface moderna"},
-{nome:"Landing Page", img:"imagens/landing-page.png", desc:"Página de vendas"},
-{nome:"Sistema Web", img:"imagens/sistema.png", desc:"Gestão completa"}
-];
-localStorage.setItem("portfolio_"+email,JSON.stringify(portfolio));
-}
+  const roleDescriptions = {
+    estudante: "Participa da comunidade para aprender, revisar conteúdos e tirar dúvidas.",
+    mentor: "Ajuda outros alunos compartilhando conhecimento e experiências.",
+    professor: "Organiza conteúdos e acompanha a evolução da turma."
+  };
 
-function render(){
-let grid=document.getElementById("grid");
-grid.innerHTML="";
+  function escapeHtml(value) {
+    return String(value || "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
 
-portfolio.forEach((p,i)=>{
-grid.innerHTML+=`
-<div class="card">
-<button class="delete-btn" onclick="event.stopPropagation(); deletar(${i})">x</button>
-<img src="${p.img}" onclick="preview('${p.img}')">
-<div class="card-content">
-<strong>${p.nome}</strong>
-<p style="font-size:13px;color:#666">${p.desc}</p>
-</div>
-</div>
-`;
-});
-}
+  function getInitials(name) {
+    return String(name || "SL")
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map(p => p[0])
+      .join("")
+      .toUpperCase();
+  }
 
-render();
+  function normalizeUserType(type) {
+    if (type === "professor") return "professor";
+    if (type === "mentor") return "mentor";
+    return "estudante";
+  }
 
-function abrirModal(){document.getElementById("modal").style.display="flex";}
-function fecharModal(){
-document.getElementById("modal").style.display="none";
-document.getElementById("nomeProj").value="";
-document.getElementById("descProj").value="";
-document.getElementById("imgProj").value="";
-}
+  function renderEmptyState() {
+    profileRoot.innerHTML = `
+      <section class="empty" style="text-align: center; padding: 40px;">
+        <h1>Nenhum perfil conectado</h1>
+        <p style="color: var(--muted); margin: 10px 0 20px;">Faça login ou crie uma conta para acessar seu perfil.</p>
+        <a class="button" href="login.html" style="text-decoration: none;">Entrar</a>
+      </section>
+    `;
+  }
 
-function salvarProjeto(){
-let nome=document.getElementById("nomeProj").value;
-let desc=document.getElementById("descProj").value;
-let file=document.getElementById("imgProj").files[0];
+  function renderProfile(user) {
+    const roleKey = normalizeUserType(user.userType);
 
-if(!nome) return alert("Nome obrigatório");
+    const name = escapeHtml(user.username);
+    const email = escapeHtml(user.email);
+    const bio = escapeHtml(user.bio);
 
-let reader=new FileReader();
+    const avatar = user.profilePhoto
+      ? `<img src="${user.profilePhoto}" alt="Foto de perfil">`
+      : getInitials(user.username);
 
-if(file){
-reader.onload=e=>{
-portfolio.push({nome,desc,img:e.target.result});
-localStorage.setItem("portfolio_"+email,JSON.stringify(portfolio));
-render();
-fecharModal();
-};
-reader.readAsDataURL(file);
-}else{
-portfolio.push({nome,desc,img:"imagens/default.png"});
-localStorage.setItem("portfolio_"+email,JSON.stringify(portfolio));
-render();
-fecharModal();
-}
-}
+    profileRoot.innerHTML = `
+      <section class="profile-layout">
+        <aside class="identity-panel">
+          <div class="identity-cover"></div>
 
-function deletar(i){
-portfolio.splice(i,1);
-localStorage.setItem("portfolio_"+email,JSON.stringify(portfolio));
-render();
-}
+          <div class="identity-body">
+            <div class="avatar">${avatar}</div>
+            <h1>${name}</h1>
+            <p class="email">${email}</p>
 
-function preview(img){
-document.getElementById("preview").style.display="flex";
-document.getElementById("previewImg").src=img;
-}
+            <span class="role-badge">${roleLabels[roleKey]}</span>
+            <p class="bio">${bio}</p>
 
-function fecharPreview(){
-document.getElementById("preview").style.display="none";
-}
+            <div class="identity-actions">
+              <button class="button" data-edit>Editar Perfil</button>
+              <button class="button danger" data-logout>Sair</button>
+            </div>
+          </div>
+        </aside>
 
-function logout(){
-localStorage.removeItem("usuarioLogado");
-location.href="index.html";
-}
+        <div class="dashboard">
+          <section class="welcome">
+            <h2>Painel de ${name}</h2>
+            <p>${roleDescriptions[roleKey]}</p>
+          </section>
+        </div>
+      </section>
+    `;
 
-function applyTheme(theme){
-if(theme === "dark"){
-document.body.classList.add("dark");
-}
-else if(theme === "light"){
-document.body.classList.remove("dark");
-}
-else{
-if(window.matchMedia('(prefers-color-scheme: dark)').matches){
-document.body.classList.add("dark");
-}else{
-document.body.classList.remove("dark");
-}
-}
-}
+    document.querySelector("[data-edit]").addEventListener("click", openEditProfile);
+    document.querySelector("[data-logout]").addEventListener("click", logout);
+  }
 
-let savedTheme = localStorage.getItem("theme") || "auto";
-applyTheme(savedTheme);
+  let localUserData = null; // Guardará o snapshot do usuário atual em memória
 
+  function openEditProfile() {
+    if (!localUserData) return;
+    editName.value = localUserData.username || "";
+    editBio.value = localUserData.bio || "";
+    editUserType.value = normalizeUserType(localUserData.userType);
+    editPhoto.value = "";
+    editDialog.showModal();
+  }
+
+  // MONITOR DE SESSÃO DO FIREBASE (SESSÃO EM NUVEM)
+  document.addEventListener("DOMContentLoaded", () => {
+    // Espera um segundo para garantir que o script do Firebase no head carregou e injetou as globais
+    const checkFirebase = setInterval(() => {
+      if (window.onAuthStateChanged && window.auth) {
+        clearInterval(checkFirebase);
+
+        window.onAuthStateChanged(window.auth, async (user) => {
+          if (user) {
+            try {
+              // Busca os dados complementares do usuário no Firestore usando o UID dele
+              const userDocRef = window.doc(window.db, "usuarios", user.uid);
+              const userDocSnap = await window.getDoc(userDocRef);
+
+              if (userDocSnap.exists()) {
+                localUserData = userDocSnap.data();
+                renderProfile(localUserData);
+              } else {
+                // Fallback caso o registro no Auth exista mas não no Firestore
+                localUserData = {
+                  uid: user.uid,
+                  username: "Usuário",
+                  email: user.email,
+                  bio: "Sem biografia ainda.",
+                  userType: "estudante",
+                  profilePhoto: ""
+                };
+                renderProfile(localUserData);
+              }
+            } catch (err) {
+              console.error("Erro ao buscar documento no Firestore:", err);
+              renderEmptyState();
+            }
+          } else {
+            renderEmptyState();
+          }
+        });
+      }
+    }, 100);
+  });
+
+  // SUBMIT DO FORMULÁRIO DE EDIÇÃO SALVANDO DIRETAMENTE NO FIRESTORE
+  editForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (!localUserData || !localUserData.uid) return;
+
+    saveEditBtn.disabled = true;
+
+    const applyEdits = async (photoBase64) => {
+      try {
+        const userDocRef = window.doc(window.db, "usuarios", localUserData.uid);
+        
+        const updatedData = {
+          username: editName.value.trim(),
+          bio: editBio.value.trim(),
+          userType: normalizeUserType(editUserType.value)
+        };
+
+        if (photoBase64) {
+          updatedData.profilePhoto = photoBase64;
+        }
+
+        // Atualiza diretamente no banco na nuvem
+        await window.updateDoc(userDocRef, updatedData);
+
+        // Atualiza a nossa cópia em memória e renderiza a tela novamente
+        localUserData = { ...localUserData, ...updatedData };
+        renderProfile(localUserData);
+        
+        saveEditBtn.disabled = false;
+        editDialog.close();
+
+      } catch (error) {
+        console.error("Erro ao salvar alterações no Firestore:", error);
+        alert("Erro ao salvar alterações na nuvem. Tente novamente.");
+        saveEditBtn.disabled = false;
+      }
+    };
+
+    const file = editPhoto.files[0];
+
+    if (!file) {
+      applyEdits(null);
+    } else {
+      const reader = new FileReader();
+      reader.onload = () => {
+        applyEdits(String(reader.result));
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  cancelEdit.addEventListener("click", () => {
+    editDialog.close();
+  });
 </script>
-
-</body>
 </html>
