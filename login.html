@@ -1,184 +1,335 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Community | Login</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>StudyLink | Login</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  
+    const firebaseConfig = {
+      apiKey: "SUA_API_KEY",
+      authDomain: "SEU_DOMINIO",
+      projectId: "SEU_PROJECT_ID",
+      storageBucket: "SEU_BUCKET",
+      messagingSenderId: "SEU_ID",
+      appId: "SEU_APP_ID"
+    };
+  
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+  
+    // Tornando as funções acessíveis para o script tradicional abaixo
+    window.auth = auth;
+    window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+  </script>
 
-:root{
---primary:#2563eb;
---secondary:#1e3a8a;
-}
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-body{background:#f5f7fb;}
+    :root {
+      color-scheme: light;
+      --primary: #2563eb;
+      --success: #10b981;
+      --bg: #f4f6fb;
+      --surface: #ffffff;
+      --text: #172033;
+      --muted: #647084;
+      --border: #dbe3ef;
+      --danger: #dc2626;
+      --shadow: 0 20px 48px rgba(15, 23, 42, 0.1);
+      --header-bg: rgba(255, 255, 255, 0.9);
+    }
 
-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:20px 8%;
-background:white;
-box-shadow:0 2px 10px rgba(0,0,0,0.05);
-}
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --primary: #60a5fa;
+        --success: #34d399;
+        --bg: #0f172a;
+        --surface: #162033;
+        --text: #e5edf9;
+        --muted: #a9b4c7;
+        --border: #2a3952;
+        --danger: #f87171;
+        --shadow: 0 20px 48px rgba(0, 0, 0, 0.36);
+        --header-bg: rgba(15, 23, 42, 0.9);
+      }
+    }
 
-.logo{font-size:22px;font-weight:700;color:var(--primary);}
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', Arial, sans-serif;
+    }
 
-nav a{margin-left:25px;text-decoration:none;color:#444;}
-nav a:hover{color:var(--primary);}
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 18px 8%;
+      background: var(--header-bg);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(14px);
+    }
 
-.container{
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:85vh;
-padding:40px 20px;
-}
+    .logo {
+      color: var(--primary);
+      font-size: 22px;
+      font-weight: 800;
+      text-decoration: none;
+    }
 
-.form-box{
-background:white;
-padding:40px;
-border-radius:16px;
-width:100%;
-max-width:360px;
-box-shadow:0 10px 30px rgba(0,0,0,0.08);
-}
+    nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
 
-.form-box h1{
-text-align:center;
-margin-bottom:25px;
-color:var(--secondary);
-}
+    nav a {
+      padding: 8px 11px;
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+    }
 
-.input-group{margin-bottom:15px;}
+    nav a:hover {
+      color: var(--primary);
+      background: color-mix(in srgb, var(--primary) 12%, transparent);
+    }
 
-.input-group input{
-width:100%;
-padding:12px;
-border-radius:8px;
-border:1px solid #ddd;
-}
+    main {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      padding: 48px 8%;
+    }
 
-.input-group input:focus{
-outline:none;
-border-color:var(--primary);
-}
+    .form-box {
+      width: min(420px, 100%);
+      padding: 36px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
 
-button{
-width:100%;
-padding:14px;
-background:var(--primary);
-color:white;
-border:none;
-border-radius:8px;
-cursor:pointer;
-margin-top:10px;
-}
+    h1 {
+      margin-bottom: 8px;
+      color: var(--primary);
+      font-size: 30px;
+      text-align: center;
+    }
 
-.msg{
-text-align:center;
-margin-top:10px;
-font-size:14px;
-}
+    .subtitle {
+      margin-bottom: 26px;
+      color: var(--muted);
+      text-align: center;
+    }
 
-.signup-link{
-text-align:center;
-margin-top:15px;
-font-size:14px;
-}
+    .input-group {
+      margin-bottom: 16px;
+    }
 
-.signup-link a{
-color:var(--primary);
-text-decoration:none;
-}
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+      font-weight: 700;
+    }
 
-footer{
-background:#111827;
-color:#aaa;
-text-align:center;
-padding:20px;
-}
-</style>
+    input {
+      width: 100%;
+      min-height: 46px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 16%, transparent);
+    }
+
+    button {
+      width: 100%;
+      min-height: 48px;
+      margin-top: 8px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--success);
+      color: white;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .error {
+      min-height: 22px;
+      margin-top: 14px;
+      color: var(--danger);
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .signup-link {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .signup-link a {
+      color: var(--primary);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    footer {
+      padding: 20px 8%;
+      background: #111827;
+      color: #b8c1d1;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 16px 6%;
+      }
+
+      main {
+        padding: 34px 6%;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <header>
+    <a class="logo" href="index.html">StudyLink</a>
 
-<header>
-<div class="logo">Student Community</div>
-<nav>
-<a href="index.html">Início</a>
-<a href="#">Fórum</a>
-<a href="#">Materiais</a>
-<a href="#">Mentoria</a>
-<a href="login.html">Login</a>
-</nav>
-</header>
+    <nav aria-label="Navegação principal">
+      <a href="index.html">Início</a>
+      <a href="forum.html">Fórum</a>
+      <a href="materiais.html">Materiais</a>
+      <a href="mentoria.html">Mentoria</a>
+    </nav>
+  </header>
 
-<div class="container">
+  <main>
+    <form class="form-box" id="loginForm">
+      <h1>Entrar</h1>
+      <p class="subtitle">Use o email e a senha criados no cadastro.</p>
 
-<form class="form-box" onsubmit="login(event)">
-<h1>Entrar</h1>
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          autocomplete="username"
+          placeholder="Digite seu email"
+          required
+        >
+      </div>
 
-<div class="input-group">
-<input type="email" id="email" placeholder="Email" required>
-</div>
+      <div class="input-group">
+        <label for="password">Senha</label>
+        <input
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          placeholder="Digite sua senha"
+          required
+        >
+      </div>
 
-<div class="input-group">
-<input type="password" id="senha" placeholder="Senha" required>
-</div>
+      <button type="submit" id="loginBtn">Entrar</button>
 
-<button>Entrar</button>
+      <p class="error" id="errorMessage" role="alert"></p>
 
-<div class="msg" id="msg"></div>
+      <p class="signup-link">
+        Ainda não tem conta?
+        <a href="criar-conta.html">Criar conta</a>
+      </p>
+    </form>
+  </main>
 
-<div class="signup-link">
-Não tem conta? <a href="criarperfil.html">Criar conta</a>
-</div>
+  <footer>
+    <p>StudyLink - Plataforma colaborativa de estudos</p>
+  </footer>
 
-</form>
+  <script>
+    const form = document.getElementById("loginForm");
+    const errorMessage = document.getElementById("errorMessage");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const loginBtn = document.getElementById("loginBtn");
+  
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      errorMessage.textContent = "";
+  
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+  
+      const email = emailInput.value.trim().toLowerCase();
+      const password = passwordInput.value;
 
-</div>
+      loginBtn.disabled = true;
+      errorMessage.textContent = "Verificando credenciais...";
+  
+      try {
+        // Realiza o login direto na nuvem do Firebase
+        await window.signInWithEmailAndPassword(window.auth, email, password);
+        
+        // Seta as flags locais apenas para controle simples da interface nas páginas
+        localStorage.setItem("usuarioLogado", "true");
+        
+        // Redireciona com sucesso para a tela de Perfil
+        window.location.href = "perfil.html";
 
-<footer>
-<p>Student Community - Projeto educacional</p>
-</footer>
+      } catch (error) {
+        console.error("Erro no Firebase Login:", error);
+        loginBtn.disabled = false;
 
-<script>
-
-function login(e){
- e.preventDefault();
-
- let email = document.getElementById("email").value;
- let senha = document.getElementById("senha").value;
-
- let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-
- let usuario = usuarios.find(u => u.email === email && u.senha === senha);
-
- let msg = document.getElementById("msg");
-
- if(usuario){
-   localStorage.setItem("usuarioLogado", email);
-
-   msg.style.color = "green";
-   msg.textContent = "Login realizado com sucesso!";
-
-   setTimeout(()=>{
-     window.location.href = "perfil.html";
-   },1000);
-
- } else {
-   msg.style.color = "red";
-   msg.textContent = "Email ou senha incorretos";
- }
-}
-
-</script>
-
-</body>
-</html>
-
+        // Trata os erros clássicos do Auth
+        if (error.code === "auth/invalid-credential" || error.code === "auth/user-not-found" || error.code === "auth/wrong-password") {
+          errorMessage.textContent = "Email ou senha incorretos.";
+        } else if (error.code === "auth/invalid-email") {
+          errorMessage.textContent = "Formato de e-mail inválido.";
+        } else {
+          errorMessage.textContent = "Erro ao entrar: " + error.message;
+        }
+      }
+    });
+  </script>
+  
+  </body>
+  </html>
